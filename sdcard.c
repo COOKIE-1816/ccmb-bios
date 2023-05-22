@@ -47,7 +47,7 @@ uint8_t sdcard_init(void) {
   return 1; // Return 1 for success, or 0 for failure
 }
 
-uint8_t sdcard_readPart(uint8_t partition) {
+/*uint8_t sdcard_readPart(uint8_t partition) {
   PORTB &= ~(1 << SD_CS_PIN);
 
     if (!sdcard_command(CMD_READ_PARTITION, partition)) {
@@ -90,7 +90,7 @@ uint8_t sdcard_readBlock(uint32_t blockNum, uint8_t *buffer) {
     PORTB |= (1 << SD_CS_PIN);
 
     return 1;
-}
+}*/
 
 uint8_t sdcard_wait(uint8_t expected_response) {
     uint16_t timeout = 0;

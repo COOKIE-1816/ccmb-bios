@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -12,45 +13,7 @@
     #error "CPU frequency not defined."
 #endif
 
-#include <util/delay.h>
-
-/*void boot() {
-    MCUCR |= (1 << IVCE);
-    MCUCR = (1 << IVSEL);
-
-    sei(); // Enable global interrupts
-
-    //if () {
-        jumpToBootloader();
-    //}
-
-    if (!sdcard_init()) {
-        while (1) {
-            _delay_ms(500);
-        }
-    }
-
-    if (!sdcard_readPart(0)) {
-        while (1) {
-            // TODO: Handle error condition
-        }
-    }
-
-    sram_init();
-
-    uint16_t address = 0x0000;
-    uint8_t buffer[512];
-
-    while (address < 0xFFFF) {
-        if (!sdcard_readBlock(buffer)) {
-            while (1) {
-            }
-        }
-
-        sram_writeBlock(address, buffer);
-        address += 512;
-    }
-}*/
+volatile uint8_t ledState;
 
 bool fileExist(const char* file) {
     if (!sdcard_dir(0))
@@ -160,16 +123,42 @@ bool bootFromFile() {
 }
 
 bool bootFromDefault() {
-    _bootFromFile("BOOT.BIN")
+    _bootFromFile("BOOT.BIN");
     return true;
 }
 
+ISR(TIMER1_COMPA_vect) {
+    ledState ^= (1 << PB5);
+
+    if (ledState) {
+        PORTB |= (1 << PB5);
+    } else {
+        PORTB &= ~(1 << PB5);
+    }
+}
+
 void boot() {
-    if (bootFromFile())
+    DDRB |= (1 << PB5);
+
+    TCCR1B |= (1 << WGM12);
+    OCR1A = 15624; // Set compare value for 2 Hz frequency (16 MHz clock)
+    TIMSK1 |= (1 << OCIE1A);
+
+    sei();
+
+    TCCR1B |= (1 << CS12) | (1 << CS10);
+
+    if (bootFromFile() || bootFromDefault())
+        TCCR1B &= ~((1 << CS12) | (1 << CS10));
+        PORTB &= ~(1 << PB5);
+
         return;
 
-    if (bootFromDefault())
-        return;
+    /*if (bootFromDefault())
+        return;*/
+
+    TCCR1B &= ~((1 << CS12) | (1 << CS10));
+    PORTB &= ~(1 << PB5);
 
     // TODO: Handle the error
 }
