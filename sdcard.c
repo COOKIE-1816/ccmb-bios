@@ -204,3 +204,44 @@ bool sdcard_dir(uint8_t partition) {
 
     //return true;
 }
+
+
+bool sdcard_skipFile(uint8_t* sectorData, uint16_t* sectorOffset) {
+    *sectorOffset += 32;
+
+    if (*sectorOffset >= SECTOR_SIZE) {
+        uint32_t nextSector = currentSector + 1;
+
+        if (!sdcard_readSector(nextSector, sectorData))
+            return false;
+
+        *sectorOffset = 0;
+
+        if (sectorData[0] == 0x00)
+            return false;
+    }
+
+    return true;
+}
+
+bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename) {
+    while (true) {
+        uint8_t attributes = sectorData[*sectorOffset + 11];
+
+        if (attributes != 0x0F && attributes != 0x08 && attributes != 0x10) {
+            if (!sdcard_skipFile(sectorData, sectorOffset))
+                return false;
+
+            continue;
+        }
+
+        memcpy(filename, sectorData + *sectorOffset, MAX_FILENAME_LENGTH);
+        filename[MAX_FILENAME_LENGTH] = '\0';
+
+        if (attributes == 0x08 || attributes == 0x10)
+            return true;
+
+        if (!sdcard_skipFile(sectorData, sectorOffset))
+            return false;
+    }
+}

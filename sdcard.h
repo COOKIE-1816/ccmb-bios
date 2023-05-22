@@ -21,8 +21,12 @@
 #define CMD_STOP_TRANSMISSION 0x4C
 #define CMD_SET_BLOCK_LENGTH 0x50
 #define CMD_APP_CMD 0x77
+
 #define ACMD_SEND_OP_COND 0x29
 #define ACMD_SET_WR_BLK_ERASE_COUNT 0x17
+
+#define MAX_FILENAME_LENGTH 12
+#define SECTOR_SIZE 512
 
 uint8_t sdcard_command(uint8_t cmd uint32_t arg);
 uint8_t sdcard_init(void);
@@ -32,6 +36,8 @@ uint8_t sdcard_readSector(uint32_t sector, uint8_t* buffer);
 bool getFs(uint8_t partitionType, uint32_t* rootDirectorySector, uint8_t* fileSystemType);
 bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector);
 bool sdcard_root();
-bool sdcard_dir(uint8_t partition);s
+bool sdcard_dir(uint8_t partition);
+bool sdcard_skipFile(uint8_t* sectorData, uint16_t* sectorOffset);
+bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename);
 
 #endif
