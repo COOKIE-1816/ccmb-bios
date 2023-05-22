@@ -245,3 +245,8 @@ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename
             return false;
     }
 }
+
+void sdcard_currentFilename(uint8_t* sectorData, uint16_t sectorOffset, char* filename) {
+    memcpy(filename, sectorData + sectorOffset, MAX_FILENAME_LENGTH);
+    filename[MAX_FILENAME_LENGTH] = '\0';
+}

@@ -39,5 +39,6 @@ bool sdcard_root();
 bool sdcard_dir(uint8_t partition);
 bool sdcard_skipFile(uint8_t* sectorData, uint16_t* sectorOffset);
 bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename);
+void sdcard_currentFilename(uint8_t* sectorData, uint16_t sectorOffset, char* filename);
 
 #endif

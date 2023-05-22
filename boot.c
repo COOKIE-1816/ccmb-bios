@@ -53,8 +53,8 @@ bool fileExist(const char* file) {
     if (!sdcard_dir(0))
         return false;
 
-    while (sdcard_next_file()) {
-        if (strcmp(sdcard_current_filename(), filename) == 0)
+    while (sdcard_nextFile()) {
+        if (strcmp(sdcard_currentFilename(), filename) == 0)
             return true;
     }
 
