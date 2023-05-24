@@ -15,7 +15,7 @@
 
 volatile uint8_t ledState;
 
-bool fileExist(const char* file) {
+bool fileExist(const char* filename) {
     if (!sdcard_dir(0))
         return false;
 
@@ -149,10 +149,12 @@ void boot() {
     TCCR1B |= (1 << CS12) | (1 << CS10);
 
     if (bootFromFile() || bootFromDefault())
+    {
         TCCR1B &= ~((1 << CS12) | (1 << CS10));
         PORTB &= ~(1 << PB5);
 
         return;
+    }
 
     /*if (bootFromDefault())
         return;*/

@@ -18,7 +18,7 @@ int main(void) {
     PORTB |= (1 << INPUT_PIN);
 
     while (1) {
-
+        cmd_process(cmd_receiveByte());
     }
 
     return 0;

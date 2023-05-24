@@ -4,6 +4,10 @@
 #include <util/delay.h>
 #include <stdint.h>
 
+#if F_CPU != 16000000UL
+    #error "16 MHz frequency is required!"
+#endif
+
 #define SDCARD_DISABLE() PORTB |= (1 << SD_CS_PIN);
 
 uint8_t sdcard_command(uint8_t cmd uint32_t arg) {

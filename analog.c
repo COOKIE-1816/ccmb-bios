@@ -1,5 +1,5 @@
 #include "analog.h"
-#include <avr/io.h>
+/*#include <avr/io.h>
 
 uint16_t analogRead(uint8_t pin) {
     //adc_configure();
@@ -24,3 +24,4 @@ void adc_channel(uint8_t pin) {
     ADMUX &= ~(0x0F);
     ADMUX |= (pin & 0x0F);
 }
+*/

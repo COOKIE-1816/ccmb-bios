@@ -1,5 +1,5 @@
-#include <avr/io>
-#include <util/delay.h
+#include <avr/io.h>
+#include <util/delay.h>
 #include "cmd.h"
 
 void cmd_transmitByte(uint8_t data) {
@@ -26,9 +26,9 @@ uint8_t cmd_receiveByte() {
 
     while(PINB & (1 << INPUT_PIN));
     for(uint8_t i = 0; i < 8; i++) {
-        while(!(PINB & (1 << CLOCK_PIN)));
+        while(!(PINB & (1 << CLOCK_PIN))) {}
 
-        if((INB & (1 << INPUT_PIN)) {
+        if((PINB & (1 << INPUT_PIN)) {
            data |= (1 << i);
         }
 
@@ -37,3 +37,5 @@ uint8_t cmd_receiveByte() {
 
     return data;
 }
+
+//void cmd_process(uint8_t command) __attribute__ {}
