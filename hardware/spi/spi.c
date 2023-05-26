@@ -1,4 +1,10 @@
+#ifndef __AVR_ATmega328P__
+  #define __AVR_ATmega328P__
+#endif
+
 #include "spi.h"
+#include <avr/io.h>
+
 
 void spi_init(void) {
     DDRB |= (1 << DDB3) | (1 << DDB5) | (1 << DDB2);

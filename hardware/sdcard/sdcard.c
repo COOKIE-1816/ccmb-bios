@@ -1,16 +1,25 @@
+#ifndef __AVR_ATmega328P__
+    #define __AVR_ATmega328P__
+#endif
+
 #include "sdcard.h"
-#include "spi.h"
+#include "../spi/spi.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>
 
-#if F_CPU != 16000000UL
-    #error "16 MHz frequency is required!"
-#endif
-
 #define SDCARD_DISABLE() PORTB |= (1 << SD_CS_PIN);
 
-uint8_t sdcard_command(uint8_t cmd uint32_t arg) {
+uint32_t startSector;
+uint32_t sectorsPerFat;
+uint8_t numberOfFats;
+uint32_t sectorsPerFat32;
+uint8_t numberOfFats32;
+
+uint32_t* rootDirectorySector;
+uint8_t* sectorData;
+
+uint8_t sdcard_command(uint8_t cmd, uint32_t arg) {
     PORTB &= ~(1 << SD_CS_PIN);
     spi_transfer(cmd | 0x40);
 
@@ -168,12 +177,12 @@ bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector) {
         uint8_t partitionType = sectorData[entryOffset + 4];
 
         if (partitionType == 0x01 || partitionType == 0x04 || partitionType == 0x06 || partitionType == 0x0E) {
-            uint32_t startSector = *((uint32_t*)&sectorData[entryOffset + 8]);
+            startSector = *((uint32_t*)&sectorData[entryOffset + 8]);
 
-            if(!getFs())
-                return false
+            if(!getFs(0x0c, rootDirectorySector, 0x01)) // TODO: fix this
+                return false;
 
-            *rootDirectorySector = startSector;
+            rootDirectorySector = startSector;
 
             return true;
         }
@@ -211,6 +220,7 @@ bool sdcard_dir(uint8_t partition) {
 
 
 bool sdcard_skipFile(uint8_t* sectorData, uint16_t* sectorOffset) {
+    uint32_t currentSector = 0;
     *sectorOffset += 32;
 
     if (*sectorOffset >= SECTOR_SIZE) {

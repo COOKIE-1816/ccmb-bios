@@ -3,7 +3,7 @@
 
 #include <avr/io.h>
 
-#define CPU_VCC PB6
+#define CPU_VCC PD0
 
 void cpu_off();
 void cpu_on();

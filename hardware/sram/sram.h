@@ -2,9 +2,9 @@
 #define SRAM_H
 
 #define SRAM_SS_PIN PB0
+#define SRAM_CS_PIN PB6
 
 /*
-#define SRAM_CS_PIN 6
 #define SRAM_WRITE_COMMAND 0x02
 #define SRAM_READ_COMMAND 0x03
 */
@@ -13,6 +13,9 @@
 #define SRAM_WRITE 0b00000010
 #define SRAM_RDSR  0b00000101
 #define SRAM_WRSR  0b00000001
+
+#define SRAM_BASE_ADDRESS 0x00000000
+#define SRAM_SIZE 10240
 
 void sram_init(void);
 void sram_select();

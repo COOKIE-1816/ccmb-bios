@@ -6,6 +6,6 @@
 #define SPI_SCK_PIN PB5
 
 void spi_init(void);
-uint8_t spi_transfer(uint8_t data)
+uint8_t spi_transfer(uint8_t data);
 
 #endif

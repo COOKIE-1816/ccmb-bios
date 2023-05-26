@@ -1,17 +1,25 @@
+#define F_CPU 16000000UL
+
+#ifndef __AVR_ATmega328P__
+    #define __AVR_ATmega328P__
+#endif
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "boot.h"
-#include "sdcard.h"
-#include "sram.h"
+#include "hardware/sdcard/sdcard.h"
+#include "hardware/sram/sram.h"
+#include "hardware/cpu/cpu.h"
 
-#ifndef F_CPU
+/*#ifndef F_CPU
     #error "CPU frequency not defined."
-#endif
+#endif*/
 
 volatile uint8_t ledState;
 
@@ -20,7 +28,7 @@ bool fileExist(const char* filename) {
         return false;
 
     while (sdcard_nextFile()) {
-        if (strcmp(sdcard_currentFilename(), filename) == 0)
+        if (strcmp(sdcard_currentFilename(), filename) == 0) // TODO: fix this
             return true;
     }
 
@@ -153,10 +161,12 @@ void boot() {
         TCCR1B &= ~((1 << CS12) | (1 << CS10));
         PORTB &= ~(1 << PB5);
 
+        cpu_on();
+
         return;
     }
 
-    /*if (bootFromDefault())
+    if (bootFromDefault())
         return;*/
 
     TCCR1B &= ~((1 << CS12) | (1 << CS10));

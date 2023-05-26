@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define SD_CS_PIN 2
 #define SD_MOSI_PIN 3
@@ -28,11 +29,13 @@
 #define MAX_FILENAME_LENGTH 12
 #define SECTOR_SIZE 512
 
+#define SD_TIMEOUT 1200
+
 uint8_t sdcard_command(uint8_t cmd, uint32_t arg);
 uint8_t sdcard_init(void);
 uint8_t sdcard_readPart(uint8_t partition);
 uint8_t sdcard_readBlock(uint8_t *buffer);
-uint8_t sdcard_readSector(uint32_t sector, uint8_t* buffer);
+bool sdcard_readSector(uint32_t sector, uint8_t* buffer);
 bool getFs(uint8_t partitionType, uint32_t* rootDirectorySector, uint8_t* fileSystemType);
 bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector);
 bool sdcard_root();

@@ -1,3 +1,7 @@
+#ifndef __AVR_ATmega328P__
+    #define __AVR_ATmega328P__
+#endif
+
 #include "sram.h"
 #include "spi.h"
 #include <avr/io.h>
@@ -17,7 +21,7 @@ void sram_init(void) {
 void sram_write_byte(uint16_t address, uint8_t data) {
     PORTB &= ~(1 << SRAM_CS_PIN);
 
-    spi_transfer(SRAM_WRITE_COMMAND);
+    spi_transfer(SRAM_WRITE);
     spi_transfer((address >> 8) & 0xFF);
     spi_transfer(address & 0xFF);
 
@@ -31,7 +35,7 @@ uint8_t sram_readByte(uint16_t address) {
 
     PORTB &= ~(1 << SRAM_CS_PIN);
 
-    spi_transfer(SRAM_READ_COMMAND);
+    spi_transfer(SRAM_READ);
     spi_transfer((address >> 8) & 0xFF);
     spi_transfer(address & 0xFF);
 
@@ -45,7 +49,7 @@ uint8_t sram_readByte(uint16_t address) {
 void sram_writeBlock(uint16_t address, const uint8_t* data, uint16_t length) {
     sram_select();
 
-    spi_transfer(SRAM_WRITE_COMMAND);
+    spi_transfer(SRAM_WRITE);
     spi_transfer((address >> 8) & 0xFF);
     spi_transfer(address & 0xFF);
 
