@@ -167,7 +167,7 @@ void boot() {
     }
 
     if (bootFromDefault())
-        return;*/
+        return;
 
     TCCR1B &= ~((1 << CS12) | (1 << CS10));
     PORTB &= ~(1 << PB5);
