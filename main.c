@@ -11,8 +11,10 @@
 
 #define BIOS_ADDRESS 0x0000
 
-void jumpToBootloader(void) {
+void jumpToBootloader();
+void jumpToBootloader() {
     void (*bootloader)(void) = (void(*)(void)) 0x7000;
+
     bootloader();
 }
 
@@ -23,8 +25,21 @@ int main(void) {
 
     PORTB |= (1 << INPUT_PIN);
 
+
+
+    boot();
+
+    
+    uint8_t receivedByte;
+
     while (1) {
-        cmd_process(cmd_receiveByte());
+        receivedByte = cmd_receiveByte();
+        
+        if (receivedByte != 0x00)
+            cmd_process(receivedByte);
+        
+        /*if (terminate)
+            break;*/
     }
 
     return 0;

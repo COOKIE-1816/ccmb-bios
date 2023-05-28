@@ -1,3 +1,7 @@
+#ifndef __AVR_ATmega328P__
+    #define __AVR_ATmega328P__
+#endif
+
 #include <avr/io.h>
 #include "error.h"
 
@@ -21,8 +25,8 @@ const uint8_t digitPatterns[] = {
 };
 
 void error(int err) {
-    int digit1 = (error >> 4) & 0xF;
-    int digit2 = error & 0xF;
+    int digit1 = (err >> 4) & 0xF;
+    int digit2 = err & 0xF;
 
     uint16_t data = (digitPatterns[digit1] << 8) | digitPatterns[digit2];
 

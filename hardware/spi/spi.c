@@ -4,7 +4,8 @@
 
 #include "spi.h"
 #include <avr/io.h>
-
+#include <string.h>
+#include <stdint.h>
 
 void spi_init(void) {
     DDRB |= (1 << DDB3) | (1 << DDB5) | (1 << DDB2);

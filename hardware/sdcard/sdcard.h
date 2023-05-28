@@ -32,6 +32,7 @@
 #define SD_TIMEOUT 1200
 
 uint8_t sdcard_command(uint8_t cmd, uint32_t arg);
+uint8_t sdcard_wait(uint8_t expected_response);
 uint8_t sdcard_init(void);
 uint8_t sdcard_readPart(uint8_t partition);
 uint8_t sdcard_readBlock(uint8_t *buffer);

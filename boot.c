@@ -16,6 +16,7 @@
 #include "hardware/sdcard/sdcard.h"
 #include "hardware/sram/sram.h"
 #include "hardware/cpu/cpu.h"
+#include "hardware/leds/leds.h"
 
 /*#ifndef F_CPU
     #error "CPU frequency not defined."
@@ -24,11 +25,13 @@
 volatile uint8_t ledState;
 
 bool fileExist(const char* filename) {
+    char buff[13];
+    
     if (!sdcard_dir(0))
         return false;
 
-    while (sdcard_nextFile()) {
-        if (strcmp(sdcard_currentFilename(), filename) == 0) // TODO: fix this
+    while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
+        if (strcmp(buff, filename) == 0)
             return true;
     }
 
@@ -139,9 +142,11 @@ ISR(TIMER1_COMPA_vect) {
     ledState ^= (1 << PB5);
 
     if (ledState) {
-        PORTB |= (1 << PB5);
+        //PORTB |= (1 << PB5);
+        red(0xff);
     } else {
-        PORTB &= ~(1 << PB5);
+        //PORTB &= ~(1 << PB5);
+        red(0x00);
     }
 }
 

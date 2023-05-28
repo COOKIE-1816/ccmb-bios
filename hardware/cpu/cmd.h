@@ -13,6 +13,6 @@
 
 void cmd_transmitByte(uint8_t data);
 uint8_t cmd_receiveByte();
-void cmd_process(uint8_t command)
+void cmd_process(uint8_t command);
 
 #endif // CMD_H

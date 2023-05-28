@@ -3,7 +3,7 @@
 #endif
 
 #include "sram.h"
-#include "spi.h"
+#include "../spi/spi.h"
 #include <avr/io.h>
 
 void sram_init(void) {

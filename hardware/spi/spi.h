@@ -1,6 +1,8 @@
 #ifndef SPI_H
 #define SPI_H
 
+#include <stdint.h>
+
 #define SPI_MOSI_PIN PB3
 #define SPI_MISO_PIN PB4
 #define SPI_SCK_PIN PB5

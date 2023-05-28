@@ -1,6 +1,8 @@
 #ifndef SRAM_H
 #define SRAM_H
 
+#include <stdint.h>
+
 #define SRAM_SS_PIN PB0
 #define SRAM_CS_PIN PB6
 
@@ -23,6 +25,6 @@ void sram_deselect();
 void sram_writeByte(uint16_t address, uint8_t data);
 uint8_t sram_readByte(uint16_t address);
 void sram_readBlock(uint16_t startAddress, uint8_t* buffer, uint16_t length);
-void sram_writeBlock(uint16_t address, const uint8_t* data, uint16_t length)
+void sram_writeBlock(uint16_t address, const uint8_t* data, uint16_t length);
 
 #endif
