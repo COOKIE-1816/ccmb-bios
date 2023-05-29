@@ -3,6 +3,7 @@
 #endif
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include "error.h"
 
 const uint8_t digitPatterns[] = {

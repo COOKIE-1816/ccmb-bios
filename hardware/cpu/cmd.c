@@ -115,7 +115,7 @@ void cmd_process(uint8_t command) {
             led_off();
             red(0xFF);
 
-            delay_ms(200);
+            _delay_ms(200);
             led_off();
 
             break;
