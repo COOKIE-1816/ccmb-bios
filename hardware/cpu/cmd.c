@@ -11,6 +11,7 @@
 #include "commands.h"
 #include "cpu.h"
 #include "../leds/leds.h"
+#include "../../sleep.h"
 
 void cmd_transmitByte(uint8_t data) {
     PORTB &= ~(1 << OUTPUT_PIN);
@@ -58,15 +59,15 @@ void cmd_process(uint8_t command) {
             cpu_reset();
             break;
 
-        // TODO: Sleep, wake
-
-        case BIOS_CMD_RX_HALT:
-            // TODO: Stop the CPU
-            while(1);
-            
+        case BIOS_CMD_RX_SLEEP:
+            sleep();
             break;
 
-        // TODO: Next
+        /*case BIOS_CMD_RX_HALT:
+            while(1);
+            
+            break;*/
+
 
         case BIOS_CMD_RX_LEDS_OFF:
             led_off();
