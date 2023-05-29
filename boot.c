@@ -109,8 +109,14 @@ bool loadFile(const char* filename, uint8_t* buffer, size_t bufferSize) {
 }
 
 void jumpToEntryPoint(void* entryPoint) {
-    __builtin_avr_delay_cycles(0);
-    asm volatile("jmp %0" ::"r"(entryPoint));
+    //__builtin_avr_delay_cycles(0);
+    //asm volatile("jmp %0" ::"r"(entryPoint));
+
+    cli();
+
+    asm volatile (
+        "jmp 0x0000"
+    );
 }
 
 bool _bootFromFile(const char* bootFilename) {
