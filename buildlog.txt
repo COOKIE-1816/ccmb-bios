@@ -1,24 +1,9 @@
-boot.c: In function ‘fileExist’:
-boot.c:33:28: warning: pointer targets in passing argument 1 of ‘sdcard_nextFile’ differ in signedness [-Wpointer-sign]
-     while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
-                            ^
-In file included from boot.c:16:0:
-hardware/sdcard/sdcard.h:45:6: note: expected ‘uint8_t * {aka unsigned char *}’ but argument is of type ‘char *’
- bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename);
-      ^
-boot.c:33:34: warning: passing argument 2 of ‘sdcard_nextFile’ makes pointer from integer without a cast [-Wint-conversion]
-     while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
-                                  ^
-In file included from boot.c:16:0:
-hardware/sdcard/sdcard.h:45:6: note: expected ‘uint16_t * {aka unsigned int *}’ but argument is of type ‘unsigned int’
- bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename);
-      ^
 boot.c: In function ‘readBootlinkIni’:
-boot.c:65:36: warning: operation on ‘contentOffset’ may be undefined [-Wsequence-point]
+boot.c:68:36: warning: operation on ‘contentOffset’ may be undefined [-Wsequence-point]
                      bootlinkContent[contentOffset++] = sectorData[32 + contentOffset];
                                     ^
 boot.c: In function ‘bootFromFile’:
-boot.c:134:1: warning: control reaches end of non-void function [-Wreturn-type]
+boot.c:137:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
 hardware/sdcard/sdcard.c: In function ‘analyzeSector’:
@@ -38,10 +23,23 @@ hardware/sdcard/sdcard.c:204:36: warning: passing argument 2 of ‘analyzeSector
 hardware/sdcard/sdcard.c:175:6: note: expected ‘uint32_t * {aka long unsigned int *}’ but argument is of type ‘uint32_t ** {aka long unsigned int **}’
  bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector) {
       ^
-/tmp/ccvNVHOc.o: In function `loadFile':
-/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:84: undefined reference to `fopen'
-/tmp/ccvNVHOc.o: In function `jumpToEntryPoint':
-/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:99: undefined reference to `r24'
-/tmp/ccvNVHOc.o: In function `_bootFromFile':
-/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:104: undefined reference to `r16'
+hardware/sdcard/sdcard.c: In function ‘fileExist’:
+hardware/sdcard/sdcard.c:277:28: warning: pointer targets in passing argument 1 of ‘sdcard_nextFile’ differ in signedness [-Wpointer-sign]
+     while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
+                            ^
+hardware/sdcard/sdcard.c:244:6: note: expected ‘uint8_t * {aka unsigned char *}’ but argument is of type ‘char *’
+ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename) {
+      ^
+hardware/sdcard/sdcard.c:277:34: warning: passing argument 2 of ‘sdcard_nextFile’ makes pointer from integer without a cast [-Wint-conversion]
+     while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
+                                  ^
+hardware/sdcard/sdcard.c:244:6: note: expected ‘uint16_t * {aka unsigned int *}’ but argument is of type ‘unsigned int’
+ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename) {
+      ^
+/tmp/cciiYfsz.o: In function `loadFile':
+/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:87: undefined reference to `fopen'
+/tmp/cciiYfsz.o: In function `jumpToEntryPoint':
+/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:102: undefined reference to `r24'
+/tmp/cciiYfsz.o: In function `_bootFromFile':
+/home/vhajsman/Desktop/projekty/ccmb-bios/boot.c:107: undefined reference to `r16'
 collect2: error: ld returned 1 exit status
