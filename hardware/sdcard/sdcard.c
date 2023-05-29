@@ -267,3 +267,17 @@ void sdcard_currentFilename(uint8_t* sectorData, uint16_t sectorOffset, char* fi
     memcpy(filename, sectorData + sectorOffset, MAX_FILENAME_LENGTH);
     filename[MAX_FILENAME_LENGTH] = '\0';
 }
+
+bool fileExist(const char* filename) {
+    char buff[13];
+    
+    if (!sdcard_dir(0))
+        return false;
+
+    while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
+        if (strcmp(buff, filename) == 0)
+            return true;
+    }
+
+    return false;
+}

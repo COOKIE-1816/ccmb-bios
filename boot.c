@@ -24,6 +24,9 @@
 
 volatile uint8_t ledState;
 
+/*
+MOVED THIS TO SDCARD.C
+
 bool fileExist(const char* filename) {
     char buff[13];
     
@@ -36,7 +39,7 @@ bool fileExist(const char* filename) {
     }
 
     return false;
-}
+}*/
 
 bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
     uint32_t sectorNumber = 0;
