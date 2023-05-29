@@ -1,5 +1,11 @@
 Official BIOS for CCMB motherboard (cookie custom mother board, **not the CCMB google searches!!!**)
 
+# Build dependicences
+It all depends on these packages to build:
+* `avr-gcc` - C and C++ compiler for AVR microcontrollers
+* `avr-libc` - C libraries for `avr-gcc`
+* linux shell and fully working kernel
+
 # Building from sources
 1. Make sure you are using linux and your system statisfies build dependicences.  
 2. Clone git repository and navigate to `ccmb-bios`.  
