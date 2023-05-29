@@ -10,6 +10,7 @@
 #include <util/delay.h>
 #include <stdint.h>
 #include <string.h>
+#include "../../error/error.h"
 
 #define SDCARD_DISABLE() PORTB |= (1 << SD_CS_PIN);
 
@@ -53,60 +54,17 @@ uint8_t sdcard_init(void) {
     _delay_ms(10);
 
     if (!sdcard_command(CMD_GO_IDLE_STATE, 0)) {
+        error(ERR_SDCARD_NORESPONSE);
         return 0;
     }
 
     if (!sdcard_wait(DATA_START_TOKEN)) {
+        error(ERR_SDCARD_NORESPONSE);
         return 0;
     }
 
-  return 1; // Return 1 for success, or 0 for failure
+  return 1;
 }
-
-/*uint8_t sdcard_readPart(uint8_t partition) {
-  PORTB &= ~(1 << SD_CS_PIN);
-
-    if (!sdcard_command(CMD_READ_PARTITION, partition)) {
-        return 0;
-    }
-
-    if (!sdcard_wait(DATA_START_TOKEN)) {
-        // Handle response error
-        return 0;
-    }
-
-    uint8_t buffer[512];
-
-    for (uint16_t i = 0; i < 512; i++) {
-        buffer[i] = spi_transfer(0xFF);
-    }
-
-    PORTB |= (1 << SD_CS_PIN);
-
-    return 1; // Return 1 for success, or 0 for failure
-}
-
-uint8_t sdcard_readBlock(uint32_t blockNum, uint8_t *buffer) {
-    uint32_t start_addr = block_num * SD_BLOCK_SIZE;
-
-    PORTB &= ~(1 << SD_CS_PIN);
-
-    if (!sdcard_command(CMD_READ_SINGLE_BLOCK, start_addr)) {
-        return 0;
-    }
-
-    if (!sdcard_wait(DATA_START_TOKEN)) {
-        return 0;
-    }
-
-    for (uint16_t i = 0; i < SD_BLOCK_SIZE; i++) {
-        buffer[i] = spi_transfer(0xFF);
-    }
-
-    PORTB |= (1 << SD_CS_PIN);
-
-    return 1;
-}*/
 
 uint8_t sdcard_wait(uint8_t expected_response) {
     uint16_t timeout = 0;
@@ -115,12 +73,12 @@ uint8_t sdcard_wait(uint8_t expected_response) {
         timeout++;
 
         if (timeout > SD_TIMEOUT) {
-            // Handle timeout error
+            error(ERR_SDCARD_TIMEOUT);
             return 0;
         }
     }
 
-    return 1; // Return 1 for success, or 0 for failure
+    return 1;
 }
 
 bool sdcard_readSector(uint32_t sector, uint8_t* buffer) {
@@ -168,13 +126,17 @@ bool getFs(uint8_t partitionType, uint32_t* rootDirectorySector, uint8_t* fileSy
             return true;
 
         default:
+            error(ERR_SDCARD_UNSUPPORTEDFS);
             return false;
     }
 }
 
 bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector) {
     if (sectorData[510] != 0x55 || sectorData[511] != 0xAA)
-        return false;
+        {
+            error(ERR_SDCARD_ANALYZEERROR);
+            return false;
+        }
 
     for (uint8_t entryOffset = 0; entryOffset < 16; entryOffset += 16) {
         uint8_t partitionType = sectorData[entryOffset + 4];
@@ -198,14 +160,17 @@ bool sdcard_root() {
     uint32_t partition_sector = 0;
     uint8_t buffer[512];
 
-    if (!sdcard_readSector(partition_sector, buffer))
+    if (!sdcard_readSector(partition_sector, buffer)){
+        error(ERR_SDCARD_NULLSECTOR);
         return false;
+    }
 
     if (!analyzeSector(sectorData, &rootDirectorySector))
+        //error(ERR_SDCARD_ANALYZEERROR); removed because it is useless
         return false;
 
 
-    return true; // Return true if successful, false otherwise
+    return true;
 }
 
 bool sdcard_dir(uint8_t partition) {
@@ -213,6 +178,7 @@ bool sdcard_dir(uint8_t partition) {
     uint8_t buffer[512];
 
     if (!sdcard_readSector(sector, buffer)) {
+        error(ERR_SDCARD_NULLSECTOR);
         return false;
     }
 
@@ -229,13 +195,17 @@ bool sdcard_skipFile(uint8_t* sectorData, uint16_t* sectorOffset) {
     if (*sectorOffset >= SECTOR_SIZE) {
         uint32_t nextSector = currentSector + 1;
 
-        if (!sdcard_readSector(nextSector, sectorData))
+        if (!sdcard_readSector(nextSector, sectorData)){
+            error(ERR_SDCARD_UNSKIPABLE);
             return false;
+        }
 
         *sectorOffset = 0;
 
-        if (sectorData[0] == 0x00)
+        if (sectorData[0] == 0x00){
+            error(ERR_SDCARD_NULLSECTOR);
             return false;
+        }
     }
 
     return true;
@@ -246,8 +216,10 @@ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename
         uint8_t attributes = sectorData[*sectorOffset + 11];
 
         if (attributes != 0x0F && attributes != 0x08 && attributes != 0x10) {
-            if (!sdcard_skipFile(sectorData, sectorOffset))
+            if (!sdcard_skipFile(sectorData, sectorOffset)){
+                
                 return false;
+            }
 
             continue;
         }

@@ -43,4 +43,9 @@ void error(int err) {
 
     PORTB |= (1 << SHIFT_LATCH_PIN);
     PORTB &= ~(1 << SHIFT_LATCH_PIN);
+
+    // Disable interrupts.
+    cli();
+
+    while(1); // Power supply must be interrupted to make machine work again.
 }

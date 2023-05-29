@@ -1,5 +1,6 @@
 #ifndef ERROR_H
 #define ERROR_H
+#include "errdef.h"
 
 #define SHIFT_DATA_PIN   2
 #define SHIFT_CLOCK_PIN  3

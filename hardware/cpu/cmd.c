@@ -110,6 +110,13 @@ void cmd_process(uint8_t command) {
         default:
             // Command unknown or unsupported.
             cmd_transmitByte(BIOS_CMD_TX_ERROR);
+
+            led_off();
+            red(0xFF);
+
+            delay_ms(200);
+            led_off();
+
             break;
     }
 }

@@ -17,6 +17,7 @@
 #include "hardware/sram/sram.h"
 #include "hardware/cpu/cpu.h"
 #include "hardware/leds/leds.h"
+#include "error/error.h"
 
 /*#ifndef F_CPU
     #error "CPU frequency not defined."
@@ -49,11 +50,15 @@ bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
     bool fileFound = false;
 
     while (!fileFound) {
-        if (!sdcard_readSector(sectorNumber, sectorData))
+        if (!sdcard_readSector(sectorNumber, sectorData)){
+            error(ERR_BOOT_UNREADABLE);
             return false;
+        }
 
-        if (sectorData[0] == 0x00)
+        if (sectorData[0] == 0x00) {
+            error(ERR_BOOT_UNREADABLE);
             return false;
+        }
 
         if (sectorData[0] != 0xE5 && (sectorData[11] & 0x08) == 0) {
             char filename[13];
@@ -87,14 +92,18 @@ bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
 bool loadFile(const char* filename, uint8_t* buffer, size_t bufferSize) {
     FILE* file = fopen(filename, "rb");
 
-    if (file == NULL)
+    if (file == NULL) {
+        error(ERR_BOOT_UNREADABLE);
         return false;
+    }
 
     size_t bytesRead = fread(buffer, sizeof(uint8_t), bufferSize, file);
     fclose(file);
 
-    if (bytesRead == 0)
+    if (bytesRead == 0) {
+        //error(ERR_BOOT_UNREADABLE);
         return false;
+    }
 
     return true;
 }
@@ -108,8 +117,10 @@ bool _bootFromFile(const char* bootFilename) {
     const size_t bufferSize = 4096;
     uint8_t buffer[bufferSize];
 
-    if (!loadFile(bootFilename, buffer, bufferSize))
+    if (!loadFile(bootFilename, buffer, bufferSize)){
+        error(ERR_BOOT_UNREADABLE);
         return false;
+    }
 
     jumpToEntryPoint(buffer);
     return true;
@@ -128,7 +139,8 @@ bool bootFromFile() {
             strncpy(bootFilename, bootlinkContent, bootFilenameLength);
             bootFilename[bootFilenameLength] = '\0';  // Null-terminate the bootFilename string
         } else {
-            // Handle the error appropriately
+            error(ERR_BOOT_NOTFOUND);
+            return false;
         }
 
         _bootFromFile(bootFilename);
@@ -164,8 +176,7 @@ void boot() {
 
     TCCR1B |= (1 << CS12) | (1 << CS10);
 
-    if (bootFromFile() || bootFromDefault())
-    {
+    if (bootFromFile() || bootFromDefault()) {
         TCCR1B &= ~((1 << CS12) | (1 << CS10));
         PORTB &= ~(1 << PB5);
 
@@ -180,5 +191,6 @@ void boot() {
     TCCR1B &= ~((1 << CS12) | (1 << CS10));
     PORTB &= ~(1 << PB5);
 
-    // TODO: Handle the error
+    error(ERR_BOOT);
+    //return;
 }
