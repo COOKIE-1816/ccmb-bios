@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define SRAM_SS_PIN PB0
-#define SRAM_CS_PIN PB6
+#define SRAM_SS_PIN PB7
+#define SRAM_CS_PIN PC4
 
 /*
 #define SRAM_WRITE_COMMAND 0x02

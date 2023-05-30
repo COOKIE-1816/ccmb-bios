@@ -7,7 +7,7 @@
 
 #define SD_CS_PIN 2
 #define SD_MOSI_PIN 3
-#define SD_MISO_PIN 4
+#define SD_MISO_PIN PD1
 #define SD_SCK_PIN 5
 
 #define DATA_START_TOKEN 0xFE

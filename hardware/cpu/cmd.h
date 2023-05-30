@@ -9,7 +9,7 @@
 
 #define CLOCK_PIN  PB0
 #define INPUT_PIN  PB1
-#define OUTPUT_PIN PB2
+#define OUTPUT_PIN PC5
 
 void cmd_transmitByte(uint8_t data);
 uint8_t cmd_receiveByte();
