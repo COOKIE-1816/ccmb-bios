@@ -69,35 +69,24 @@ bool fopen(FILE* file, const char* filename, const char* mode) {
         file->buffer[i] = spi_receive();
     }
 
-    // Implement the necessary logic to open the file
-    // For example, you would need to interface with the underlying hardware
-    // and file system to open the file
+    // TODO: Implement the necessary logic to open the file. interface with the underlying hardware and file system to open the file
     
-    // Here, you can implement your own logic to handle file opening
-    // using the specific hardware and file system you are working with
-    
-    // Placeholder code, replace with actual implementation
-    
-    // Create a FILE structure to represent the opened file
     FILE* file = (FILE*)malloc(sizeof(FILE));
     
-    // Perform the necessary operations to open the file
-    // For example, send commands to the hardware or file system
+    // TODO: Perform the necessary operations to open the file. send commands to the file system
     
     return file;
-
-    //return true;
 }
 
 size_t custom_fread(void* ptr, size_t size, size_t count, FILE* file) {
     // TODO: Implement file read logic specific to your system. read from the SD card or SPI communication
-    // TODO: Return the number of bytes read
     
+    // Return the number of bytes read
     return 0;
 }
 
 int custom_fclose(FILE* file) {
-    // TODO: Implement file close logic specific to your system. close the SD card or SPI communication
+    // TODO: Implement file close logics
 
     return 0;
 }
