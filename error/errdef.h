@@ -17,6 +17,9 @@
 #define ERR_SDCARD_NOROOT                           0x0e
 #define ERR_SDCARD_NULLSECTOR                       0x0f
 #define ERR_SDCARD_UNSKIPABLE                       0x10
+#define ERR_FILE_NULL                               0x11
+#define ERR_FILE_BADMODE                            0x12
+#define ERR_FILE_BADNAME                            0x13
 
 
 #endif // ERRDEF_H
