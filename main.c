@@ -43,9 +43,6 @@ int main(void) {
     DDRD |=  (1 << CPU_VCC);            // PD0  0   ff
     DDRD &= ~(1 << SD_MISO_PIN);        // PD1  1   00
 
-    // These pins are initialized in "spi.c".
-    //      PB2 PB3 PB4 PB5 // TODO: Fix these pins
-
     PORTB |= (1 << INPUT_PIN);
 
     boot();

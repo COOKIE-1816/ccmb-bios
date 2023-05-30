@@ -8,8 +8,8 @@
 #include <stdint.h>
 
 void spi_init(void) {
-    DDRB |= (1 << DDB3) | (1 << DDB5) | (1 << DDB2);
-    DDRB &= ~(1 << DDB4);
+    DDRB |= (1 << PD3) | (1 << PD5) | (1 << PD2);
+    DDRB &= ~(1 << PD4);
     SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR1) | (1 << SPR0);
 
     // Set SPI mode (optional)
