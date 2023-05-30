@@ -5,9 +5,14 @@
 #endif
 
 #include <avr/io.h>
-#include "hardware/analog.h"
+//#include "hardware/analog.h" - deprecated
 #include "boot.h"
 #include "hardware/cpu/cmd.h"
+#include "hardware/cpu/cpu.h"
+#include "hardware/leds/leds.h"
+#include "hardware/sdcard/sdcard.h"
+#include "hardware/sram/sram.h"
+#include "error/error.h"
 
 #define BIOS_ADDRESS 0x0000
 
@@ -19,13 +24,29 @@ void jumpToBootloader() {
 }
 
 int main(void) {
-    DDRB |=  (1 << OUTPUT_PIN);
-    DDRB &= ~(1 << INPUT_PIN);
-    DDRB &= ~(1 << CLOCK_PIN);
+    // Set pin modes as output or as an input. This is really important.
+    DDRB &= ~(1 << CLOCK_PIN);          // PB0  0   00
+    DDRB &= ~(1 << INPUT_PIN);          // PB1  1   00
+    DDRB |=  (1 << SHIFT_DATA_PIN);     // PB2  2   ff
+    DDRB |=  (1 << OUTPUT_PIN);         // PB2  2   ff
+    DDRB |=  (1 << SHIFT_CLOCK_PIN);    // PB3  3   ff
+    DDRB |=  (1 << SHIFT_LATCH_PIN);    // PB4  4   ff
+    DDRC |=  (1 << LED_RED);            // PC0  0   ff
+    DDRC |=  (1 << LED_YELLOW);         // PC1  1   ff
+    DDRC |=  (1 << LED_GREEN);          // PC2  2   ff
+    DDRC |=  (1 << CPU_FAN);            // PC3  3   ff
+    DDRD |=  (1 << CPU_VCC);            // PD0  0   ff
+    DDRB |=  (1 << SD_CS_PIN);          // PB2  2   ff
+    DDRB |=  (1 << SD_MOSI_PIN);        // PB3  3   ff
+    DDRB &= ~(1 << SD_MISO_PIN);        // PB4  4   00
+    DDRB |=  (1 << SD_SCK_PIN);         // PB5  5   ff
+    DDRB |=  (1 << SRAM_SS_PIN);        // PB0  0   ff
+    DDRB |=  (1 << SRAM_CS_PIN);        // PB6  6   ff
+
+    // These pins are initialized in "spi.c".
+    //      PB2 PB3 PB4 PB5 // TODO: Fix these pins
 
     PORTB |= (1 << INPUT_PIN);
-
-
 
     boot();
 

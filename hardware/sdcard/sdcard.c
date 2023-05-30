@@ -49,7 +49,7 @@ uint8_t sdcard_command(uint8_t cmd, uint32_t arg) {
 uint8_t sdcard_init(void) {
     spi_init();
 
-    DDRB |= (1 << SD_CS_PIN);
+    //DDRB |= (1 << SD_CS_PIN);
 
     _delay_ms(10);
 

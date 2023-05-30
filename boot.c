@@ -23,7 +23,7 @@
     #error "CPU frequency not defined."
 #endif*/
 
-volatile uint8_t ledState;
+volatile uint8_t ledState = 0x00;
 
 /*
 MOVED THIS TO SDCARD.C
@@ -160,9 +160,7 @@ bool bootFromDefault() {
 }
 
 ISR(TIMER1_COMPA_vect) {
-    ledState ^= (1 << PB5);
-
-    if (ledState) {
+    if (ledState == 0x00) {
         //PORTB |= (1 << PB5);
         red(0xff);
     } else {
@@ -172,8 +170,6 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 void boot() {
-    DDRB |= (1 << PB5);
-
     TCCR1B |= (1 << WGM12);
     OCR1A = 15624; // Set compare value for 2 Hz frequency (16 MHz clock)
     TIMSK1 |= (1 << OCIE1A);
@@ -195,8 +191,7 @@ void boot() {
         return;
 
     TCCR1B &= ~((1 << CS12) | (1 << CS10));
-    PORTB &= ~(1 << PB5);
+    // PORTB &= ~(1 << PB5);
 
     error(ERR_BOOT);
-    //return;
 }
