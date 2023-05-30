@@ -1,0 +1,27 @@
++---------------------------------------------------------------------------------------+
+|                               PIN USAGE DEFINITION                                    |
++------------+--------------------------------------------------------------------------+
+|  PHYSICAL  |                                                                          |
++------+-----+------+-----------------------+-------------------------------------------+
+| PORT | PIN | MODE | SALVE DEVICE          | DEFINITION                                |
++------+-----+------+-----------------------+-------------------------------------------+
+| B    | 0   | 00   | CPU                   | #define CLOCK_PIN  PB0                    |
+|      | 1   | 00   | CPU                   | #define INPUT_PIN  PB1                    |
+|      | 2   | ff   | SD Card               | #define SD_CS_PIN 2                       |
+|      | 3   | ff   | SD Card               | #define SD_MOSI_PIN 3                     |
+|      | 4   | ff   | Shift Register        | #define SHIFT_LATCH_PIN  4                |
+|      | 5   | ff   | SD Card               | #define SD_SCK_PIN 5                      |
+|      | 6   | ff   | Shift Register        | #define SHIFT_DATA_PIN   PB6              |
+|      | 7   | ff   | SRAM                  | #define SRAM_SS_PIN PB7                   |
++------+--------------------------------------------------------------------------------+
+| C    | 0   | ff   | LED indicator         | #define LED_RED PC0                       |
+|      | 1   | ff   | LED indicator         | #define LED_YELLOW PC1                    |
+|      | 2   | ff   | LED indicator         | #define LED_GREEN PC2                     |
+|      | 3   | ff   | CPU fan               | #define CPU_FAN PC3                       |
+|      | 4   | ff   | SRAM                  | #define SRAM_CS_PIN PC4                   |
+|      | 5   | ff   | CPU                   | #define OUTPUT_PIN PC5                    |
+|      | 6   | ff   | Shift Register        | #define SHIFT_CLOCK_PIN PC6               |
++------+--------------------------------------------------------------------------------+
+| D    | 0   | ff   | CPU                   | #define CPU_VCC PD0                       |
+|      | 1   | 00   | SD Card               | #define SD_MISO_PIN PD1                   |
++------+-----+------+-----------------------+-------------------------------------------+
