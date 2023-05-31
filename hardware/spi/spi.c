@@ -12,14 +12,11 @@ void spi_init(void) {
     DDRB &= ~(1 << PD4);
     SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR1) | (1 << SPR0);
 
-    // Set SPI mode (optional)
-    //SPCR |= (1 << CPOL) | (1 << CPHA);
-
-    // Set clock frequency (optional)
-    //SPCR |= (1 << SPR1) | (1 << SPR0);
-    //SPSR |= (1 << SPI2X);
-
-    //#define SPI_INIT_COMPLETE
+    SPCR &= ~(1 << CPOL);
+    SPCR &= ~(1 << CPHA);
+    
+    SPCR &= ~(1 << SPR1);
+    SPCR |= (1 << SPR0);
 }
 
 uint8_t spi_transfer(uint8_t data) {

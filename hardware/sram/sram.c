@@ -11,9 +11,6 @@ void sram_init(void) {
 
   spi_init();
 
-  // TODO: Configure SPI settings for SRAM communication
-  // TODO: Set SPI mode, clock frequency, and other relevant settings
-
   PORTC &= ~(1 << SRAM_CS_PIN);
   PORTC |= (1 << SRAM_CS_PIN);
 }
