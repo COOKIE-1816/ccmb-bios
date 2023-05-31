@@ -19,28 +19,9 @@
 #include "hardware/leds/leds.h"
 #include "error/error.h"
 
-/*#ifndef F_CPU
-    #error "CPU frequency not defined."
-#endif*/
-
 volatile uint8_t ledState = 0x00;
 
-/*
-MOVED THIS TO SDCARD.C
-
-bool fileExist(const char* filename) {
-    char buff[13];
-    
-    if (!sdcard_dir(0))
-        return false;
-
-    while (sdcard_nextFile(buff, sizeof(buff), NULL)) {
-        if (strcmp(buff, filename) == 0)
-            return true;
-    }
-
-    return false;
-}*/
+uint16_t contentOffset;
 
 bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
     uint32_t sectorNumber = 0;
@@ -64,7 +45,6 @@ bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
             char filename[13];
 
             sdcard_currentFilename(sectorData, sectorOffset, filename);
-
             if (strcmp(filename, "BOOTLINK.INI") == 0) {
                 uint16_t contentOffset = 0;
                 uint16_t contentLength = sectorData[28] + (sectorData[29] << 8);
@@ -92,10 +72,6 @@ bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
 int file_putc(char c, FILE *stream) {
     FILE* _file = (FILE*) stream;
 
-    /*if (_file->write(&c, sizeof(c)) != sizeof(c)) {
-        return -1;
-    }*/
-
     int opStatus = _file->put(c, _file);
 
     if(opStatus != 0)
@@ -116,7 +92,6 @@ bool loadFile(const char* filename, uint8_t* buffer, size_t bufferSize) {
     fdevopen(NULL, file_putc, file_getc);
 
     FILE* file = &file_stream;
-    // FILE* file = fopen(filename, "rb");
 
     if (file == NULL) {
         error(ERR_BOOT_UNREADABLE);
@@ -135,9 +110,6 @@ bool loadFile(const char* filename, uint8_t* buffer, size_t bufferSize) {
 }
 
 void jumpToEntryPoint(void* entryPoint) {
-    //__builtin_avr_delay_cycles(0);
-    //asm volatile("jmp %0" ::"r"(entryPoint));
-
     cli();
 
     asm volatile (
@@ -169,7 +141,7 @@ bool bootFromFile() {
             size_t bootFilenameLength = newlinePos - bootlinkContent;
 
             strncpy(bootFilename, bootlinkContent, bootFilenameLength);
-            bootFilename[bootFilenameLength] = '\0';  // Null-terminate the bootFilename string
+            bootFilename[bootFilenameLength] = '\0';
         } else {
             error(ERR_BOOT_NOTFOUND);
             return false;
@@ -187,10 +159,8 @@ bool bootFromDefault() {
 
 ISR(TIMER1_COMPA_vect) {
     if (ledState == 0x00) {
-        //PORTB |= (1 << PB5);
         red(0xff);
     } else {
-        //PORTB &= ~(1 << PB5);
         red(0x00);
     }
 }
@@ -217,7 +187,6 @@ void boot() {
         return;
 
     TCCR1B &= ~((1 << CS12) | (1 << CS10));
-    // PORTB &= ~(1 << PB5);
 
-    error(ERR_BOOT);
+    error(ERR_BOOT); // Inspecified boot failure
 }

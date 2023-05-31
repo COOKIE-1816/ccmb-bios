@@ -14,14 +14,14 @@
 
 #define SDCARD_DISABLE() PORTB |= (1 << SD_CS_PIN);
 
-uint32_t startSector;
-uint32_t sectorsPerFat;
-uint8_t numberOfFats;
-uint32_t sectorsPerFat32;
-uint8_t numberOfFats32;
+uint32_t 	startSector;
+uint32_t 	sectorsPerFat;
+uint8_t 	numberOfFats;
+uint32_t 	sectorsPerFat32;
+uint8_t 	numberOfFats32;
 
-uint32_t* rootDirectorySector;
-uint8_t* sectorData;
+uint32_t* 	rootDirectorySector;
+uint8_t* 	sectorData;
 
 uint8_t sdcard_command(uint8_t cmd, uint32_t arg) {
     PORTB &= ~(1 << SD_CS_PIN);
@@ -48,9 +48,7 @@ uint8_t sdcard_command(uint8_t cmd, uint32_t arg) {
 
 uint8_t sdcard_init(void) {
     spi_init();
-
-    //DDRB |= (1 << SD_CS_PIN);
-
+    
     _delay_ms(10);
 
     if (!sdcard_command(CMD_GO_IDLE_STATE, 0)) {
@@ -132,8 +130,7 @@ bool getFs(uint8_t partitionType, uint32_t* rootDirectorySector, uint8_t* fileSy
 }
 
 bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector) {
-    if (sectorData[510] != 0x55 || sectorData[511] != 0xAA)
-        {
+    if (sectorData[510] != 0x55 || sectorData[511] != 0xAA) {
             error(ERR_SDCARD_ANALYZEERROR);
             return false;
         }
@@ -142,13 +139,12 @@ bool analyzeSector(uint8_t* sectorData, uint32_t* rootDirectorySector) {
         uint8_t partitionType = sectorData[entryOffset + 4];
 
         if (partitionType == 0x01 || partitionType == 0x04 || partitionType == 0x06 || partitionType == 0x0E) {
-            startSector = *((uint32_t*)&sectorData[entryOffset + 8]);
+            startSector = *((uint32_t*) &sectorData[entryOffset + 8]);
 
-            if(!getFs(0x0c, rootDirectorySector, 0x01)) // TODO: fix this
+            if(!getFs(0x0c, rootDirectorySector, (uint8_t*) 0x01)) // TODO: fix this
                 return false;
 
             rootDirectorySector = startSector;
-
             return true;
         }
     }
@@ -166,10 +162,8 @@ bool sdcard_root() {
     }
 
     if (!analyzeSector(sectorData, &rootDirectorySector))
-        //error(ERR_SDCARD_ANALYZEERROR); removed because it is useless
         return false;
-
-
+        
     return true;
 }
 
@@ -183,8 +177,6 @@ bool sdcard_dir(uint8_t partition) {
     }
 
     return sdcard_root();
-
-    //return true;
 }
 
 
@@ -217,7 +209,6 @@ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename
 
         if (attributes != 0x0F && attributes != 0x08 && attributes != 0x10) {
             if (!sdcard_skipFile(sectorData, sectorOffset)){
-                
                 return false;
             }
 
@@ -229,7 +220,6 @@ bool sdcard_nextFile(uint8_t* sectorData, uint16_t* sectorOffset, char* filename
 
         if (attributes == 0x08 || attributes == 0x10)
             return true;
-
         if (!sdcard_skipFile(sectorData, sectorOffset))
             return false;
     }
