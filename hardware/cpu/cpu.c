@@ -11,11 +11,11 @@
 #include <util/delay.h>
 
 void cpu_off() {
-    PORTB &= ~(CPU_VCC << 1);
+    PORTD &= ~(CPU_VCC << 1);
 }
 
 void cpu_on() {
-    PORTB |= (CPU_VCC << 1);
+    PORTD |= (CPU_VCC << 1);
 }
 
 void cpu_reset() {

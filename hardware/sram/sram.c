@@ -7,19 +7,19 @@
 #include <avr/io.h>
 
 void sram_init(void) {
-  DDRB |= (1 << SRAM_CS_PIN);
+  DDRC |= (1 << SRAM_CS_PIN);
 
   spi_init();
 
   // TODO: Configure SPI settings for SRAM communication
   // TODO: Set SPI mode, clock frequency, and other relevant settings
 
-  PORTB &= ~(1 << SRAM_CS_PIN);
-  PORTB |= (1 << SRAM_CS_PIN);
+  PORTC &= ~(1 << SRAM_CS_PIN);
+  PORTC |= (1 << SRAM_CS_PIN);
 }
 
 void sram_write_byte(uint16_t address, uint8_t data) {
-    PORTB &= ~(1 << SRAM_CS_PIN);
+    PORTC &= ~(1 << SRAM_CS_PIN);
 
     spi_transfer(SRAM_WRITE);
     spi_transfer((address >> 8) & 0xFF);
@@ -27,13 +27,13 @@ void sram_write_byte(uint16_t address, uint8_t data) {
 
     spi_transfer(data);
 
-    PORTB |= (1 << SRAM_CS_PIN);
+    PORTC |= (1 << SRAM_CS_PIN);
 }
 
 uint8_t sram_readByte(uint16_t address) {
     uint8_t data;
 
-    PORTB &= ~(1 << SRAM_CS_PIN);
+    PORTC &= ~(1 << SRAM_CS_PIN);
 
     spi_transfer(SRAM_READ);
     spi_transfer((address >> 8) & 0xFF);
@@ -41,7 +41,7 @@ uint8_t sram_readByte(uint16_t address) {
 
     data = spi_transfer(0xFF);
 
-    PORTB |= (1 << SRAM_CS_PIN);
+    PORTC |= (1 << SRAM_CS_PIN);
 
     return data;
 }
@@ -57,7 +57,7 @@ void sram_writeBlock(uint16_t address, const uint8_t* data, uint16_t length) {
         spi_transfer(data[i]);
     }
 
-    PORTB |= (1 << SRAM_CS_PIN);
+    PORTC |= (1 << SRAM_CS_PIN);
     sram_deselect();
 }
 

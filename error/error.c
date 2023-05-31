@@ -38,8 +38,8 @@ void error(int err) {
             PORTB &= ~(1 << SHIFT_DATA_PIN);
         }
 
-        PORTB |= (1 << SHIFT_CLOCK_PIN);
-        PORTB &= ~(1 << SHIFT_CLOCK_PIN);
+        PORTC |= (1 << SHIFT_CLOCK_PIN);
+        PORTC &= ~(1 << SHIFT_CLOCK_PIN);
     }
 
     PORTB |= (1 << SHIFT_LATCH_PIN);

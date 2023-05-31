@@ -14,21 +14,21 @@
 #include "../../sleep.h"
 
 void cmd_transmitByte(uint8_t data) {
-    PORTB &= ~(1 << OUTPUT_PIN);
+    PORTC &= ~(1 << OUTPUT_PIN);
     _delay_us(10);
 
     for(uint8_t i = 0; i < 8; i++) {
         if(data & (1 << i)) {
-            PORTB |= (1 << OUTPUT_PIN);
+            PORTC |= (1 << OUTPUT_PIN);
         } else {
-            PORTB |= ~(1 << OUTPUT_PIN);
+            PORTC |= ~(1 << OUTPUT_PIN);
         }
 
         while(!(PINB & (1 << CLOCK_PIN)));
-        while(PINB & (1 << CLOCK_PIN));
+        while(  PINB & (1 << CLOCK_PIN));
     }
 
-    PORTB |= (1 << OUTPUT_PIN);
+    PORTC |= (1 << OUTPUT_PIN);
     _delay_us(10);
 }
 
