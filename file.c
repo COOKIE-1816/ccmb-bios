@@ -18,7 +18,7 @@
 #include "hardware/sdcard/sdcard.h"
 #include "error/error.h"
 
-typedef struct {
+/*typedef struct {
     const char* filename;
     const char* mode;
     uint8_t* buffer;
@@ -90,4 +90,4 @@ int custom_fclose(FILE* file) {
     // TODO: Implement file close logics
 
     return 0;
-}
+}*/

@@ -20,6 +20,7 @@
 #define ERR_FILE_NULL                               0x11
 #define ERR_FILE_BADMODE                            0x12
 #define ERR_FILE_BADNAME                            0x13
+#define ERR_FILE_WRITEERROR                         0x14
 
 
 #endif // ERRDEF_H

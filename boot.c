@@ -89,8 +89,34 @@ bool readBootlinkIni(char* bootlinkContent, uint16_t maxContentLength) {
     return true;
 }
 
+int file_putc(char c, FILE *stream) {
+    FILE* _file = (FILE*) stream;
+
+    /*if (_file->write(&c, sizeof(c)) != sizeof(c)) {
+        return -1;
+    }*/
+
+    int opStatus = _file->put(c, _file);
+
+    if(opStatus != 0)
+        error(ERR_FILE_WRITEERROR);
+    
+    return opStatus
+}
+
+int file_getc(FILE *stream, uint8_t* buffer) {
+    // TODO: Read character from file
+    
+    return EOF; // return eof or character value.
+}
+
+FILE file_stream = FDEV_SETUP_STREAM(file_putc, file_getc, _FDEV_SETUP_RW);
+
 bool loadFile(const char* filename, uint8_t* buffer, size_t bufferSize) {
-    FILE* file = fopen(filename, "rb");
+    fdevopen(NULL, file_putc, file_getc);
+
+    FILE* file = &file_stream;
+    // FILE* file = fopen(filename, "rb");
 
     if (file == NULL) {
         error(ERR_BOOT_UNREADABLE);
